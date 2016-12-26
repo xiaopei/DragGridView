@@ -42,7 +42,8 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 	public static float childRatio = .85f;
 	protected int rate=3;//宽高比
 	protected int colCount;
-	protected int childSize, padding, dpi, scroll = 0;
+	protected int childSize, dpi, scroll = 0;
+	public int padding;
 	protected float lastDelta = 0;
 	protected Handler handler = new Handler();
 	// dragging vars
@@ -130,12 +131,12 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 //		text.setText(itemText);
 //		addView(layout);
 		TextView view = new TextView(context);
-		padding =10;
+		int childpadding = 10;
 		view.setBackgroundResource(R.drawable.uneditable);//初始背景
 		view.setWidth((childSize+padding)*dpi / 160);
-		view.setHeight((childSize/rate+padding*2));
+		view.setHeight((childSize/rate+childpadding*2));
 		view.setGravity(Gravity.CENTER);
-		view.setPadding(padding,padding,padding,padding);
+		view.setPadding(childpadding,childpadding,childpadding,childpadding);
 		view.setText(itemText);
 		view.setTextColor(Color.GRAY);
 		view.setTextSize(18);
@@ -578,4 +579,32 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 		}
 		return datas;
 	}
+
+	//在onMeasure里，测量所有子View的宽高，以及确定Viewgroup自己的宽高。
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		//获取系统传递过来测量出的宽度 高度，以及相应的测量模式。
+		//如果测量模式为 EXACTLY( 确定的dp值，match_parent)，则可以调用setMeasuredDimension()设置，
+		//如果测量模式为 AT_MOST(wrap_content),则需要经过计算再去调用setMeasuredDimension()设置
+		int widthMeasure = MeasureSpec.getSize(widthMeasureSpec);
+		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+		int heightMeasure = MeasureSpec.getSize(heightMeasureSpec);
+		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+		//计算宽度 高度 //wrap_content测量模式下会使用到:
+		//存储最后计算出的宽度，
+		int maxLineWidth = 0;
+
+		// 得到内部元素的个数
+		int count = getChildCount();
+
+		int tempLine = count%rate>0?1:0;
+		int totalHeight = (count / rate + tempLine )*(childSize/rate+padding*2)+padding*2;
+
+		//适配padding,如果是wrap_content,则除了子控件本身占据的控件，还要在加上父控件的padding
+		setMeasuredDimension(
+				widthMode != MeasureSpec.EXACTLY? maxLineWidth + getPaddingLeft() + getPaddingRight() : widthMeasure,
+				heightMode != MeasureSpec.EXACTLY ? totalHeight + getPaddingTop() + getPaddingBottom() : heightMeasure);
+	}
+
 }
