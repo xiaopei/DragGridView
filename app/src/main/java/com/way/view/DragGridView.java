@@ -310,10 +310,10 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 			return false;
 		longClicked=true;
 		int index = getLastIndex();
-		if (index != -1) {
+		if (index != -1 && index !=0) {
 			if(!canDelete){
 				canDelete=true;
-				for(int i=0;i<newPositions.size();i++){
+				for(int i=1;i<newPositions.size();i++){
 					View v=getChildAt(i);
 					if(null!=v){
 						v.setBackgroundResource(R.drawable.editable);//删除背景
@@ -359,7 +359,7 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 					// check for new target hover
 					int target = getTargetFromCoor(x, y);
 					if (lastTarget != target) {
-						if (target != -1) {
+						if (target != -1 && target != 0) {
 							animateGap(target);
 							lastTarget = target;
 						}
