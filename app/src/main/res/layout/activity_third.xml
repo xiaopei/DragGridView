@@ -15,6 +15,21 @@
         android:id="@+id/flowlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
     </com.way.view.FlowViewGroup>
+
+    <Button android:id="@+id/rise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/flowlayout"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dp"
+        android:text="正序"/>
+
+    <Button android:id="@+id/dic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/flowlayout"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@id/rise"
+        android:text="反序"/>
 </RelativeLayout>
