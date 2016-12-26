@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.animoto.android"
+        applicationId "com.way"
         minSdkVersion 15
         targetSdkVersion 24
     }
@@ -16,4 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+}
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.+'
 }

@@ -51,14 +51,14 @@ public class DragGridView extends ViewGroup implements View.OnTouchListener,
 	protected boolean enabled = true, touching = false;
 	// anim vars
 	public static int animT = 150;
-	protected ArrayList<Integer> newPositions = new ArrayList<Integer>();
+	public ArrayList<Integer> newPositions = new ArrayList<Integer>();
 	// listeners
 	protected OnRearrangeListener onRearrangeListener;
 	protected OnClickListener secondaryOnClickListener;
 	private OnItemClickListener onItemClickListener;
 	private OnItemClickListener onDeleteItemClickListener;
 	private Context context;
-	private boolean canDelete=false;
+	public boolean canDelete=false;
 	private boolean longClicked=false;
 	private int num=0;
 

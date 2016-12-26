@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.animoto.android.R;
 import com.way.view.DragGridView;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  * @createdate 2014-7-17 下午3:58:51
  * @Description: 
  */
-public class ColumnDiy extends Activity implements OnClickListener {
+public class DragViewActivity extends Activity implements OnClickListener {
 	private DragGridView mDragGridView;
 	private ArrayList<String> unselectedData;
 	private ArrayList<String> selectedData;
@@ -101,7 +102,7 @@ public class ColumnDiy extends Activity implements OnClickListener {
 		mDragGridView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		unselected = (GridView) findViewById(R.id.unselected);
 		DisplayMetrics metrics = new DisplayMetrics();
-		ColumnDiy.this.getWindowManager().getDefaultDisplay()
+		DragViewActivity.this.getWindowManager().getDefaultDisplay()
 				.getMetrics(metrics);
 		dpi = metrics.densityDpi;
 		if (dpi < 201) {
@@ -122,7 +123,7 @@ public class ColumnDiy extends Activity implements OnClickListener {
 		unselectedData.add("真话");
 		unselectedData.add("教育");
 		unselectedData.add("电影");
-		adapter = new UnselectedTagAdapter(ColumnDiy.this,
+		adapter = new UnselectedTagAdapter(DragViewActivity.this,
 				unselectedData);
 		unselected.setAdapter(adapter);
 		setListener();
@@ -165,11 +166,15 @@ public class ColumnDiy extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
-				String word = unselectedData.remove(arg2);
-				mDragGridView.addView(word);
-				mDragGridView.postInvalidate();
-				selectedData.add(word);
-				adapter.notifyDataSetChanged();
+				if(!mDragGridView.canDelete) {
+					String word = unselectedData.remove(arg2);
+					mDragGridView.addView(word);
+					mDragGridView.postInvalidate();
+					selectedData.add(word);
+					adapter.notifyDataSetChanged();
+				}else{
+					Toast.makeText(DragViewActivity.this,"退出排序状态才可添加~",Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 //		templateButtonRight.setOnClickListener(new OnClickListener() {
@@ -202,33 +207,29 @@ public class ColumnDiy extends Activity implements OnClickListener {
 //			}
 //		});
 //		 findViewById(R.id.title_but_left).setOnClickListener(this);
-//		 bg.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				for (int i = 0; i < mDragGridView.newPositions.size(); i++) {
-//					View view = mDragGridView.getChildAt(i);
-//					if (null != view) {
+		 bg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				for (int i = 0; i < mDragGridView.newPositions.size(); i++) {
+					View view = mDragGridView.getChildAt(i);
+					if (null != view) {
 //						if(SharedPreferenceUtil.getBoolean(ColumnDiy.this, "isNight")){
 //							view.setBackgroundResource(R.drawable.night_uneditable);// 背景还原
 //						}else{
-//							view.setBackgroundResource(R.drawable.uneditable);// 背景还原
+							view.setBackgroundResource(R.drawable.uneditable);// 背景还原
 //						}
-//					}
-//				}
-//				handler.sendEmptyMessage(2);
-//
-//			}
-//		});
-		 
-		 
+					}
+				}
+				handler.sendEmptyMessage(2);
 
+			}
+		});
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
 	}
 
 	@Override
@@ -242,29 +243,26 @@ public class ColumnDiy extends Activity implements OnClickListener {
 		 if(keyCode == KeyEvent.KEYCODE_BACK){
 //			 templateButtonRight.performClick();
 		 }
+		 finish();
 		 return true;
 	 }
 
 	@Override
 	public void onClick(View v) {
-//		if (mDragGridView.canDelete) {
-//			mDragGridView.canDelete = false;
-//			for (int i = 0; i < mDragGridView.newPositions.size(); i++) {
-//				View view = mDragGridView.getChildAt(i);
-//				if (null != view) {
-//					if(SharedPreferenceUtil.getBoolean(ColumnDiy.this, "isNight")){
-//						view.setBackgroundResource(R.drawable.night_uneditable);// 背景还原
-//					}else{
-//						view.setBackgroundResource(R.drawable.uneditable);// 背景还原
-//					}
-//					view.setPadding(0, tvTopPading, 0, 0);
-//					((TextView)view).setTextSize(14);
-//				}
-//			}
+		if (mDragGridView.canDelete) {
+			mDragGridView.canDelete = false;
+			for (int i = 0; i < mDragGridView.newPositions.size(); i++) {
+				View view = mDragGridView.getChildAt(i);
+				if (null != view) {
+					view.setBackgroundResource(R.drawable.uneditable);// 背景还原
+					view.setPadding(0, tvTopPading, 0, 0);
+					((TextView)view).setTextSize(14);
+				}
+			}
 			handler.sendEmptyMessage(2);
-//		} else {
-//			unselectedData = null;
-//			finish();
-//		}
+		} else {
+			unselectedData = null;
+			finish();
+		}
 	}
 }
